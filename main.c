@@ -8,6 +8,8 @@
 
 #include "Player/Player.c"
 #include "Maps/Map.h"
+#include "Graphics/Model.h"
+#include "Graphics/Model.c"
 
 
 #define SCREEN_WIDTH  400
@@ -29,33 +31,70 @@ int main(int argc, char* argv[]) {
 	// Create colors
 	Beatmap map;
 	map.BackgroundColor = C2D_Color32(0xFF, 0x00, 0x00, 0x00);
+	map.hitobjects[0] = (HitObject){
+		60, 180.0f, C2D_Color32(0x00, 0x19, 0xff, 0xff)
+	};
+	map.hitobjects[1] = (HitObject){
+		120, 240.0f, C2D_Color32(0x00, 0x19, 0xff, 0xff)
+	};
+	map.hitobjects[2] = (HitObject){
+		180, 120.0f, C2D_Color32(0x00, 0x19, 0xff, 0xff)
+	};
+	map.hitobjects[3] = (HitObject){
+		240, 90.0f, C2D_Color32(0x00, 0x19, 0xff, 0xff)
+	};
+	map.hitobjects[4] = (HitObject){
+		300, 300.0f, C2D_Color32(0x00, 0x19, 0xff, 0xff)
+	};
+	map.totalObjects = 4;
 
 	u32 clrClear = map.BackgroundColor;
+
+	ShapeModel model;
+	model.shapes[0] = (Shape){
+		SM_RECTANGLE, 0b10000000, 
+		128, 128, 0, 69, 69,
+		C2D_Color32(0x32, 0xFF, 0x43, 0xFF), 
+		C2D_Color32(0x69, 0xFF, 0x00, 0xFF), 
+		C2D_Color32(0xEE, 0xFE, 0x45, 0x77), 
+		C2D_Color32(0x48, 0xFF, 0x00, 0xFF), 
+	};
+	model.shapecount = 2;
+
+	pInit();
+
+	time_t startTime = osGetTime();
+	time_t nowTime = osGetTime();
+	
 
 	// Main loop
 	while (aptMainLoop())
 	{
 		hidScanInput();
-
+		
+		
 		// Respond to user input
 		u32 kDown = hidKeysDown();
 		if (kDown & KEY_START)
 			break; // break in order to return to hbmenu
-		printf("\x1b[1;1HSimple citro2d shapes example");
-		printf("\x1b[2;1HCPU:     %6.2f%%\x1b[K", C3D_GetProcessingTime()*6.0f);
-		printf("\x1b[3;1HGPU:     %6.2f%%\x1b[K", C3D_GetDrawingTime()*6.0f);
-		printf("\x1b[4;1HCmdBuf:  %6.2f%%\x1b[K", C3D_GetCmdBufUsage()*100.0f);
+		printf("\x1b[1;1Hosu!3ds fruits! Codebase");
+		printf("\x1b[2;1HCPU:         %6.2f%%\x1b[K", C3D_GetProcessingTime()*6.0f);
+		printf("\x1b[3;1HGPU:         %6.2f%%\x1b[K", C3D_GetDrawingTime()*6.0f);
+		printf("\x1b[4;1HCmdBuf:      %6.2f%%\x1b[K", C3D_GetCmdBufUsage()*100.0f);
+		printf("\x1b[5;1HActive(ms):  %i\x1b[K", nowTime - startTime);
 
+		nowTime = osGetTime();
 		// Render the scene
 		C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
 		C2D_TargetClear(top, clrClear);
 		C2D_SceneBegin(top); //Start Render
 
 		pDrawPlayer(top);
+		pMovePlayer(hidKeysHeld());
 
 		C3D_FrameEnd(0);
 	}
-
+	
 	// Deinit libs
 	C2D_Fini();
 	C3D_Fini();
