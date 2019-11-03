@@ -8,8 +8,7 @@
 
 #include "Player/Player.c"
 #include "Maps/Map.h"
-#include "Graphics/Model.h"
-#include "Graphics/Model.c"
+
 
 
 #define SCREEN_WIDTH  400
@@ -30,7 +29,7 @@ int main(int argc, char* argv[]) {
 
 	// Create colors
 	Beatmap map;
-	map.BackgroundColor = C2D_Color32(0xFF, 0x00, 0x00, 0x00);
+	map.BackgroundColor = C2D_Color32(0xFF, 0x00, 0x30, 0x00);
 	map.hitobjects[0] = (HitObject){
 		60, 180.0f, C2D_Color32(0x00, 0x19, 0xff, 0xff)
 	};
@@ -49,17 +48,6 @@ int main(int argc, char* argv[]) {
 	map.totalObjects = 4;
 
 	u32 clrClear = map.BackgroundColor;
-
-	ShapeModel model;
-	model.shapes[0] = (Shape){
-		SM_RECTANGLE, 0b10000000, 
-		128, 128, 0, 69, 69,
-		C2D_Color32(0x32, 0xFF, 0x43, 0xFF), 
-		C2D_Color32(0x69, 0xFF, 0x00, 0xFF), 
-		C2D_Color32(0xEE, 0xFE, 0x45, 0x77), 
-		C2D_Color32(0x48, 0xFF, 0x00, 0xFF), 
-	};
-	model.shapecount = 2;
 
 	pInit();
 
@@ -91,6 +79,8 @@ int main(int argc, char* argv[]) {
 
 		pDrawPlayer(top);
 		pMovePlayer(hidKeysHeld());
+
+		
 
 		C3D_FrameEnd(0);
 	}
